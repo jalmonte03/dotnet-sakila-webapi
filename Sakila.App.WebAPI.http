@@ -1,0 +1,6 @@
+@Sakila.App.WebAPI_HostAddress = http://localhost:5245
+
+GET {{Sakila.App.WebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
