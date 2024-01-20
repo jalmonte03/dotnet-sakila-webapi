@@ -32,6 +32,12 @@ builder.Services.AddSwaggerGen(options => {
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
+builder.Services.AddCors(options => {
+    options.AddDefaultPolicy(policy => policy
+        .AllowAnyHeader()
+        .AllowAnyOrigin()
+        .AllowAnyMethod());
+});
 
 var app = builder.Build();
 
@@ -42,6 +48,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.UseDeveloperExceptionPage();
 }
+
+app.UseCors();
 
 app.UseHttpsRedirection();
 

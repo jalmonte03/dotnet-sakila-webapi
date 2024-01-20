@@ -28,18 +28,25 @@ public class CustomerService : ICustomerService
         return CustomerDTO.MapCustomerToDTO(c);
     }
 
-    public async Task<IEnumerable<CustomerDTO>> GetCustomers(int Page, int Limit)
+    public async Task<CustomersResponseDTO> GetCustomers(int Page, int Limit)
     {
-        ICollection<Customer> customers = await db.Customers
+        var query = db.Customers
             .Include(c => c.Address)
             .ThenInclude(a => a.City)
-            .ThenInclude(c => c.Country)
+            .ThenInclude(c => c.Country);
+
+        int totalCustomers = await query.CountAsync();
+        ICollection<Customer> customers = await query
             .Skip((Page - 1) * Limit)
             .Take(Limit)
             .ToListAsync();
 
-
-        return customers.Select(c => CustomerDTO.MapCustomerToDTO(c));
+        return new CustomersResponseDTO()
+        {
+            CurrentPage = Page,
+            Customers = customers.Select(c => CustomerDTO.MapCustomerToDTO(c)),
+            Total = totalCustomers
+        };
     }
 
     public async Task<CustomerRentalsDTO> GetCustomerRentals(int Id, int Page, int Limit)

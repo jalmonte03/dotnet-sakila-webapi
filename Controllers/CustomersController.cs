@@ -40,7 +40,7 @@ public class CustomersController : ControllerBase
     /// <param name="limit">The amount of customer per page</param>
     /// <returns></returns>
     [HttpGet]
-    [ProducesResponseType(200, Type = typeof(IEnumerable<CustomerDTO>))]
+    [ProducesResponseType(200, Type = typeof(CustomersResponseDTO))]
     [ProducesResponseType(400, Type = typeof(string))]
     public async Task<IActionResult> GetCustomers(int page = 1, int limit = 10)
     {
