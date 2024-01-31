@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Sakila.App.WebAPI.DTOs;
-using Sakila.App.WebAPI.Model;
 using Sakila.App.WebAPI.Service;
 
 namespace Sakila.App.WebAPI.Controller;
@@ -28,7 +27,10 @@ public class RentalsController : ControllerBase
     {
         RentalGetDTO? rental = await rentalService.GetRental(id);
 
-        if (rental == null) return NotFound();
+        if (rental == null)
+        {
+            return NotFound();
+        } 
 
         return Ok(rental);
     }
@@ -40,10 +42,10 @@ public class RentalsController : ControllerBase
     /// <param name="Limit"></param>
     /// <returns></returns>
     [HttpGet]
-    [ProducesResponseType(200, Type = typeof(IEnumerable<RentalGetDTO>))]
-    public async Task<IActionResult> GetRentals(int Page, int Limit)
+    [ProducesResponseType(200, Type = typeof(RentalsGetDTO))]
+    public async Task<IActionResult> GetRentals(int Page = 1, int Limit = 10)
     {
-        IEnumerable<RentalGetDTO> rentals = await rentalService.GetRentals(Page, Limit);
+        RentalsGetDTO rentals = await rentalService.GetRentals(Page, Limit);
 
         return Ok(rentals);
     }

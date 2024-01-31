@@ -22,20 +22,31 @@ public class FilmService : IFilmService
             .Include(f => f.Categories)
             .FirstOrDefaultAsync(film => film.Id == id);
 
-        if(film == null) return null;
+        if(film == null) 
+        {
+            return null;
+        }
 
         return FilmGetDTO.MapFilmToDTO(film);
     }
 
-    public async Task<IEnumerable<FilmGetDTO>> GetFilms(int Page = 1, int Limit = 10)
+    public async Task<FilmsGetDTO> GetFilms(int Page = 1, int Limit = 10)
     {
+        var filmsQuery = db.Films.AsQueryable();
+        var filmsTotal = await filmsQuery.CountAsync();
         ICollection<Film> films = await db.Films
             .Include(f => f.Categories)
             .Skip((Page - 1) * Limit)
             .Take(Limit)
             .ToListAsync();
-
-        return films.Select(FilmGetDTO.MapFilmToDTO);
+        var filmsDto = films.Select(FilmGetDTO.MapFilmToDTO);
+        
+        return new FilmsGetDTO
+        {
+            Page = Page,
+            Total = filmsTotal,
+            films = filmsDto
+        };
     }
 
     public async Task<IEnumerable<RentalRentedInfoDTO>> GetMostRentedFilms(int Limit, DateOnly From, DateOnly To)

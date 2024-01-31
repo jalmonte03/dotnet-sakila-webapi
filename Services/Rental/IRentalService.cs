@@ -7,5 +7,5 @@ namespace Sakila.App.WebAPI.Service;
 public interface IRentalService
 {
     public Task<RentalGetDTO?> GetRental(int Id);
-    public Task<IEnumerable<RentalGetDTO>> GetRentals(int Page, int Limit);
+    public Task<RentalsGetDTO> GetRentals(int Page, int Limit);
 }

@@ -28,7 +28,10 @@ public class FilmsController : ControllerBase
     {
         FilmGetDTO? film = await filmService.GetFilm(id);
 
-        if (film == null) return NotFound();
+        if (film == null)
+        {
+            return NotFound();
+        } 
         
         return Ok(film);
     }
@@ -40,7 +43,7 @@ public class FilmsController : ControllerBase
     /// <param name="Limit">Limit of films per page</param>
     /// <returns></returns>
     [HttpGet]
-    [ProducesResponseType(200, Type = typeof(IEnumerable<FilmGetDTO>))]
+    [ProducesResponseType(200, Type = typeof(FilmsGetDTO))]
     public async Task<IActionResult> GetAllFilms(int p = 1, int Limit = 10)
     {
         return Ok(await filmService.GetFilms(p, Limit));
@@ -59,10 +62,14 @@ public class FilmsController : ControllerBase
     public async Task<IActionResult> GetMostRentedFilms(int limit = 3, string from = "2005-05-24", string to="2005-05-28")
     {
         if (limit <= 0)
+        {
             return BadRequest("The limit parameter can't be zero or a negative number.");
+        }   
 
         if (limit > 100)
+        {
             return BadRequest("The limit parameter can't be more than a 100.");
+        }
 
         return Ok(await filmService.GetMostRentedFilms(limit, DateOnly.Parse(from), DateOnly.Parse(to)));
     }

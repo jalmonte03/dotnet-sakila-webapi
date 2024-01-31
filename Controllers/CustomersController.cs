@@ -28,7 +28,10 @@ public class CustomersController : ControllerBase
     {
         CustomerDTO? customer = await customerService.GetCustomer(id);
 
-        if (customer == null) return NotFound();
+        if (customer == null)
+        {
+            return NotFound();
+        } 
 
         return Ok(customer);
     }
@@ -44,7 +47,10 @@ public class CustomersController : ControllerBase
     [ProducesResponseType(400, Type = typeof(string))]
     public async Task<IActionResult> GetCustomers(int page = 1, int limit = 10)
     {
-        if (page <= 0 || limit <= 0) return BadRequest("Page and Limit must be greater than 0");
+        if (page <= 0 || limit <= 0)
+        {
+            return BadRequest("Page and Limit must be greater than 0");
+        } 
 
         return Ok(await customerService.GetCustomers(page, limit));
     }
@@ -61,7 +67,10 @@ public class CustomersController : ControllerBase
     [ProducesResponseType(200, Type = typeof(CustomerRentalsDTO))]
     public async Task<IActionResult> GetCustomersRentals(int id, int page = 1, int limit = 10)
     {
-        if (page <= 0 || limit <= 0) return BadRequest("Page and Limit must be greater than 0");
+        if (page <= 0 || limit <= 0)
+        {
+            return BadRequest("Page and Limit must be greater than 0");
+        } 
 
         return Ok(await customerService.GetCustomerRentals(id, page, limit));
     }
@@ -90,8 +99,10 @@ public class CustomersController : ControllerBase
     {
         CustomerSummaryDTO? summary = await customerService.GetCustomerSummary(id);
 
-        if (summary == null) 
+        if (summary == null)
+        {
             return NotFound();
+        }
 
         return Ok(summary);
     }

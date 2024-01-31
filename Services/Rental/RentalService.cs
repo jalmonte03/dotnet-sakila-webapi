@@ -22,21 +22,33 @@ public class RentalService : IRentalService
             .ThenInclude(i => i.Film)
             .FirstOrDefaultAsync(r => r.Id == Id);
 
-        if (rental == null) return null;
+        if (rental == null)
+        {
+            return null;
+        } 
 
         return RentalGetDTO.MapRentalToDTO(rental);
     }
 
-    public async Task<IEnumerable<RentalGetDTO>> GetRentals(int Page = 1, int Limit = 10)
+    public async Task<RentalsGetDTO> GetRentals(int Page = 1, int Limit = 10)
     {
-        ICollection<Rental> rentals = await db.Rentals
+        var rentalsQuery = db.Rentals.AsQueryable();
+        var rentalsCount = rentalsQuery.Count();
+
+        var rentals = await rentalsQuery
             .Include(r => r.Customer)
             .Include(r => r.Inventory)
             .ThenInclude(i => i.Film)
             .Skip((Page - 1) * Limit)
             .Take(Limit)
             .ToListAsync();
-        
-        return rentals.Select(r => RentalGetDTO.MapRentalToDTO(r));
+
+        var rentalsDto = rentals.Select(r => RentalGetDTO.MapRentalToDTO(r));
+
+        return new RentalsGetDTO {
+            Page = Page,
+            Total = rentalsCount,
+            rentals = rentalsDto
+        };
     }
 }

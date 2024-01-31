@@ -23,7 +23,10 @@ public class CustomerService : ICustomerService
                         .ThenInclude(c => c.Country)
                         .FirstOrDefaultAsync(customer => customer.Id == Id);
                         
-        if (c == null) return null;
+        if (c == null)
+        {
+            return null;
+        }
 
         return CustomerDTO.MapCustomerToDTO(c);
     }
@@ -104,7 +107,10 @@ public class CustomerService : ICustomerService
         // Get the Name
         var Customer = await GetCustomer(Id);
 
-        if (Customer == null) return null;
+        if (Customer == null)
+        {
+            return null;
+        } 
         
         var MostViewedCategory = (await GetCustomerWatchedCategories(Id)).FirstOrDefault();
         
