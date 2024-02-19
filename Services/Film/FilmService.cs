@@ -30,15 +30,19 @@ public class FilmService : IFilmService
         return FilmGetDTO.MapFilmToDTO(film);
     }
 
-    public async Task<FilmsGetDTO> GetFilms(int Page = 1, int Limit = 10)
+    public async Task<FilmsGetDTO> GetFilms(int Page = 1, int Limit = 10, string Title = "")
     {
-        var filmsQuery = db.Films.AsQueryable();
-        var filmsTotal = await filmsQuery.CountAsync();
-        ICollection<Film> films = await db.Films
+        var filmsQuery = db.Films
             .Include(f => f.Categories)
+            .Where(f => f.Title!.Contains(Title));
+
+        var filmsTotal = await filmsQuery.CountAsync();
+
+        ICollection<Film> films = await filmsQuery
             .Skip((Page - 1) * Limit)
             .Take(Limit)
             .ToListAsync();
+
         var filmsDto = films.Select(FilmGetDTO.MapFilmToDTO);
         
         return new FilmsGetDTO

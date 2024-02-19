@@ -35,4 +35,7 @@ public class Customer
     [Column("address_id")]
     public int AddressId { get; set; }
     public virtual Address Address { get; set; } = null!;
+
+    [NotMapped]
+    public string? FullName => $"{FirstName} {LastName}";
 }

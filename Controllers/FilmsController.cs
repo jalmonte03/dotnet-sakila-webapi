@@ -39,14 +39,15 @@ public class FilmsController : ControllerBase
     /// <summary>
     /// Get multiple films.
     /// </summary>
-    /// <param name="p">Current Page to search</param>
-    /// <param name="Limit">Limit of films per page</param>
+    /// <param name="page">Current Page to search</param>
+    /// <param name="limit">Limit of films per page</param>
+    /// <param name="title">The title of the film to seach</param>
     /// <returns></returns>
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(FilmsGetDTO))]
-    public async Task<IActionResult> GetAllFilms(int p = 1, int Limit = 10)
+    public async Task<IActionResult> GetAllFilms(int page = 1, int limit = 10, string title = "")
     {
-        return Ok(await filmService.GetFilms(p, Limit));
+        return Ok(await filmService.GetFilms(page, limit, title));
     }
 
     /// <summary>

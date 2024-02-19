@@ -31,12 +31,13 @@ public class CustomerService : ICustomerService
         return CustomerDTO.MapCustomerToDTO(c);
     }
 
-    public async Task<CustomersResponseDTO> GetCustomers(int Page, int Limit)
+    public async Task<CustomersResponseDTO> GetCustomers(int Page, int Limit, string Name)
     {
         var query = db.Customers
             .Include(c => c.Address)
             .ThenInclude(a => a.City)
-            .ThenInclude(c => c.Country);
+            .ThenInclude(c => c.Country)
+            .Where(c => (c.FirstName + ' ' + c.LastName).Contains(Name));
 
         int totalCustomers = await query.CountAsync();
         ICollection<Customer> customers = await query

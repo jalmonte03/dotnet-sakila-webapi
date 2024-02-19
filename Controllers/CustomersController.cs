@@ -41,18 +41,19 @@ public class CustomersController : ControllerBase
     /// </summary>
     /// <param name="page">The current page being viewed</param>
     /// <param name="limit">The amount of customer per page</param>
+    /// <param name="name">The name to be search</param>
     /// <returns></returns>
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(CustomersResponseDTO))]
     [ProducesResponseType(400, Type = typeof(string))]
-    public async Task<IActionResult> GetCustomers(int page = 1, int limit = 10)
+    public async Task<IActionResult> GetCustomers(int page = 1, int limit = 10, string name = "")
     {
         if (page <= 0 || limit <= 0)
         {
             return BadRequest("Page and Limit must be greater than 0");
         } 
 
-        return Ok(await customerService.GetCustomers(page, limit));
+        return Ok(await customerService.GetCustomers(page, limit, name));
     }
 
 
