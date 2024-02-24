@@ -63,25 +63,45 @@ public class FilmService : IFilmService
             where DateOnly.FromDateTime(rental.RentalDate) > From &&
                  DateOnly.FromDateTime(rental.RentalDate) < To
             group film by film.Id into filmGroup
-            select new { 
+            select new RentalRentedInfoDTO() { 
                 FilmId = filmGroup.Key,
-                FilmTitle = filmGroup.First().Title,
+                FilmTitle = filmGroup.First().Title!,
                 Rented = filmGroup.Count()
             };
         
-        var response = await rentalsQuery
+        var rentalRentedInfoDTO = await rentalsQuery
             .OrderByDescending(r => r.Rented)
             .ThenBy(r => r.FilmTitle)
             .Take(Limit)
             .ToListAsync();
-        
-        IEnumerable<RentalRentedInfoDTO> rentalRentedInfoDTO = response.Select(r => new RentalRentedInfoDTO()
-        {
-            FilmId = r.FilmId,
-            FilmTitle = r.FilmTitle,
-            Rented = r.Rented
-        });
 
         return rentalRentedInfoDTO;
+    }
+
+    public async Task<IEnumerable<CategoryRentedDTO>> GetMostWatchedCategories(int Limit, DateOnly From, DateOnly To)
+    {
+        IQueryable<CategoryRentedDTO> mostWatchedCategoriesQuery = from rental in db.Rentals
+            join invetory in db.Inventories
+                on rental.Inventory equals invetory
+            join film in db.Films
+                on invetory.Film equals film
+            join film_category in db.FilmCategories
+                on film.Id equals film_category.FilmId
+            join category in db.Categories
+                on film_category.Category equals category
+            where DateOnly.FromDateTime(rental.RentalDate) > From &&
+                 DateOnly.FromDateTime(rental.RentalDate) < To
+            group category by category.Name into categoryGroup
+            select new CategoryRentedDTO() {
+                CategoryName = categoryGroup.Key,
+                Amount = categoryGroup.Count()
+            };
+
+        var response = await mostWatchedCategoriesQuery
+            .OrderByDescending(c => c.Amount)
+            .Take(Limit)
+            .ToListAsync();
+
+        return response;
     }
 }

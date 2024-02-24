@@ -50,6 +50,11 @@ public class SakilaContext : DbContext
             .HasMany(e => e.Categories)
             .WithMany(e => e.Films)
             .UsingEntity<FilmCategory>();
+
+        modelBuilder.HasDbFunction(typeof(SakilaContext).GetMethod(nameof(GetMonthlyRentalRevenue), new[] { typeof(DateOnly), typeof(DateOnly), typeof(bool) })!);
     }
+
+    // User Defined Functions
+    public IQueryable<MonthlyRentalRevenueUDF> GetMonthlyRentalRevenue(DateOnly from, DateOnly to, bool includeNotReturned) => FromExpression(() => GetMonthlyRentalRevenue(from, to, includeNotReturned));
 }
 #pragma warning restore CS1591

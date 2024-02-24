@@ -1,5 +1,3 @@
-using Sakila.App.WebAPI.Model;
-
 namespace Sakila.App.WebAPI.DTOs;
 
 public class RentalRentedInfoDTO

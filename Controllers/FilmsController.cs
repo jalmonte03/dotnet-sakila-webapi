@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Sakila.App.WebAPI.DTOs;
-using Sakila.App.WebAPI.Model;
 using Sakila.App.WebAPI.Service;
+using Sakila.App.WebAPI.Constants;
 
 namespace Sakila.App.WebAPI.Controller;
 
@@ -60,7 +60,7 @@ public class FilmsController : ControllerBase
     [HttpGet("most_rented_films")]
     [ProducesResponseType(200, Type = typeof(IEnumerable<RentalRentedInfoDTO>))]
     [ProducesResponseType(400, Type = typeof(string))]
-    public async Task<IActionResult> GetMostRentedFilms(int limit = 3, string from = "2005-05-24", string to="2005-05-28")
+    public async Task<IActionResult> GetMostRentedFilms(int limit = 3, string from = SakilaConstant.START_RENT_DATE, string to = SakilaConstant.END_RENT_DATE)
     {
         if (limit <= 0)
         {
@@ -72,6 +72,45 @@ public class FilmsController : ControllerBase
             return BadRequest("The limit parameter can't be more than a 100.");
         }
 
-        return Ok(await filmService.GetMostRentedFilms(limit, DateOnly.Parse(from), DateOnly.Parse(to)));
+        if (!DateOnly.TryParse(from, out DateOnly fromDate))
+        {
+            return BadRequest("The from parameter is an invalid date");
+        }
+        
+        if (!DateOnly.TryParse(to, out DateOnly toDate))
+        {
+            return BadRequest("The from parameter is an invalid date");
+        }
+
+        return Ok(await filmService.GetMostRentedFilms(limit, fromDate, toDate));
+    }
+
+    /// <summary>
+    /// Get the most watched categories
+    /// </summary>
+    /// <param name="limit">How many categories to show</param>
+    /// <param name="from">starting date</param>
+    /// <param name="to">ending date</param>
+    /// <returns></returns>
+    [HttpGet("most_watched_categories")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<CategoryRentedDTO>))]
+    public async Task<IActionResult> GetMostWatchedCategories(int limit = 3, string from = SakilaConstant.START_RENT_DATE, string to = SakilaConstant.END_RENT_DATE)
+    {
+        if (limit <= 0)
+        {
+            return BadRequest("The limit parameter can't be zero or a negative number.");
+        }
+
+        if (!DateOnly.TryParse(from, out DateOnly fromDate))
+        {
+            return BadRequest("The from parameter is an invalid date");
+        }
+        
+        if (!DateOnly.TryParse(to, out DateOnly toDate))
+        {
+            return BadRequest("The from parameter is an invalid date");
+        }
+
+        return Ok(await filmService.GetMostWatchedCategories(limit, fromDate, toDate));
     }
 }
