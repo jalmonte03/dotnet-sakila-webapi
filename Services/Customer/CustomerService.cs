@@ -117,6 +117,7 @@ public class CustomerService : ICustomerService
         
         var MoviesRented = await GetCustomerRentals(Id, Page: 1, Limit: int.MaxValue);  
         var MoviesRentedTotal = MoviesRented.Rentals.Count();
+        var MoviesNotReturned = MoviesRented.Rentals.Where(r => r.ReturnDate == null).Count();
         var TotalSpent = MoviesRented.Rentals.Sum(rental => rental.FilmRentalRate);
 
         return new CustomerSummaryDTO()
@@ -125,6 +126,7 @@ public class CustomerService : ICustomerService
             CustomerName = $"{Customer.First_Name} {Customer.Last_Name}",
             MostViewedCategory = MostViewedCategory?.Category,
             MoviesRentedTotal = MoviesRentedTotal,
+            MoviesNotReturned = MoviesNotReturned,
             TotalSpent = TotalSpent
         };
     }

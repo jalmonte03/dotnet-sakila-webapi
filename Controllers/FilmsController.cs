@@ -113,4 +113,23 @@ public class FilmsController : ControllerBase
 
         return Ok(await filmService.GetMostWatchedCategories(limit, fromDate, toDate));
     }
+    
+    /// <summary>
+    /// Get a summary of a film
+    /// </summary>
+    /// <param name="id">The film's Id</param>
+    /// <returns></returns>
+    [HttpGet("{id:int}/summary")]
+    [ProducesResponseType(200, Type = typeof(FilmSummaryDTO))]
+    public async Task<IActionResult> GetFilmSummary(int id)
+    {
+        FilmSummaryDTO? filmSummary = await filmService.GetFilmSummary(id);
+
+        if(filmSummary == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(filmSummary);
+    }
 }

@@ -11,7 +11,7 @@ public class CustomerRentalGetDTO
     public byte FilmRentalDuration { get; set; }
     public decimal FilmRentalRate { get; set; }
     public DateTime RentalDate { get; set; }
-    public DateTime ReturnDate { get; set; }
+    public DateTime? ReturnDate { get; set; }
 
     public static CustomerRentalGetDTO MapRentalToDTO(Rental r)
     {

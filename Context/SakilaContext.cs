@@ -16,6 +16,7 @@ public class SakilaContext : DbContext
     public DbSet<Category> Categories { get; set; }
     public DbSet<Inventory> Inventories { get; set; }
     public DbSet<FilmCategory> FilmCategories { get; set; }
+    public DbSet<Payment> Payments { get; set; }
 
     public SakilaContext(IConfiguration config)
     {
@@ -51,10 +52,10 @@ public class SakilaContext : DbContext
             .WithMany(e => e.Films)
             .UsingEntity<FilmCategory>();
 
-        modelBuilder.HasDbFunction(typeof(SakilaContext).GetMethod(nameof(GetMonthlyRentalRevenue), new[] { typeof(DateOnly), typeof(DateOnly), typeof(bool) })!);
+        modelBuilder.HasDbFunction(typeof(SakilaContext).GetMethod(nameof(GetMonthlyRentalRevenue), new[] { typeof(DateOnly), typeof(DateOnly) })!);
     }
 
     // User Defined Functions
-    public IQueryable<MonthlyRentalRevenueUDF> GetMonthlyRentalRevenue(DateOnly from, DateOnly to, bool includeNotReturned) => FromExpression(() => GetMonthlyRentalRevenue(from, to, includeNotReturned));
+    public IQueryable<MonthlyRentalRevenueUDF> GetMonthlyRentalRevenue(DateOnly from, DateOnly to) => FromExpression(() => GetMonthlyRentalRevenue(from, to));
 }
 #pragma warning restore CS1591

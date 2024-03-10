@@ -72,9 +72,9 @@ public class RentalService : IRentalService
         return RentalMonthSummaryDTO.FillMissingMonths(rentalMonthSummaries, From, To);
     }
 
-    public async Task<IEnumerable<RentalMonthRevenueDTO>> GetMonthlyRentalRevenue(DateOnly From, DateOnly To, bool IncludeNotReturned)
+    public async Task<IEnumerable<RentalMonthRevenueDTO>> GetMonthlyRentalRevenue(DateOnly From, DateOnly To)
     {
-        List<RentalMonthRevenueDTO> monthlyRentalProfit = await db.GetMonthlyRentalRevenue(From, To, IncludeNotReturned)
+        List<RentalMonthRevenueDTO> monthlyRentalProfit = await db.GetMonthlyRentalRevenue(From, To)
             .Select(mrp => new RentalMonthRevenueDTO
             {
                 Year = mrp.Year.ToString(),
@@ -85,12 +85,7 @@ public class RentalService : IRentalService
             .OrderBy(mrp => mrp.Year)
             .ThenBy(mrp => mrp.Month)
             .ToListAsync();
-
-        if(IncludeNotReturned)
-        {
-            return RentalMonthRevenueDTO.FillMissingMonths(monthlyRentalProfit, From, To);
-        }
         
-        return monthlyRentalProfit;
+        return RentalMonthRevenueDTO.FillMissingMonths(monthlyRentalProfit, From, To);
     }
 }

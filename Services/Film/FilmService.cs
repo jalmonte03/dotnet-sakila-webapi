@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Sakila.App.WebAPI.Context;
 using Sakila.App.WebAPI.DTOs;
 using Sakila.App.WebAPI.Model;
@@ -103,5 +104,58 @@ public class FilmService : IFilmService
             .ToListAsync();
 
         return response;
+    }
+
+    public async Task<FilmSummaryDTO?> GetFilmSummary(int id)
+    {
+        if(db.Films.Find(id) is null)
+        {
+            return null;
+        }
+
+        // Get the inventory ids of which haven't been returned yet
+        var idsNotInStock = await db.Rentals
+            .Join(
+                db.Inventories, 
+                rental => rental.InventoryId,
+                inventory => inventory.Id,
+                (rental, inventory) => new {
+                    FilmId = inventory.FilmId,
+                    InventoryId = inventory.Id,
+                    ReturnDate = rental.ReturnDate
+                })
+            .Where(inv => inv.FilmId == id && inv.ReturnDate == null)
+            .Select(inv => inv.InventoryId)
+            .ToArrayAsync();
+
+        var inStock = await db.Inventories
+            .Where(i => i.FilmId == id && !idsNotInStock.Contains(i.Id))
+            .CountAsync();
+
+        // Get Rentals Info and Gross Income
+        IQueryable<FilmSummaryQueryDTO> filmSummaryQuery = 
+            from rental in db.Rentals
+                join inventory in db.Inventories
+                    on rental.Inventory equals inventory
+                join film in db.Films
+                    on inventory.Film equals film
+                join payment in db.Payments
+                    on rental.Id equals payment.RentalId
+                where inventory.FilmId == id
+                select new FilmSummaryQueryDTO {
+                    RentalId = rental.Id,
+                    ReturnedDate = rental.ReturnDate,
+                    GrossIncome = payment.Amount
+                };
+
+        var films = await filmSummaryQuery.ToListAsync();
+
+        return new FilmSummaryDTO
+        {
+            Rented = films.Count(),
+            NotReturned = films.Where(f => f.ReturnedDate == null).Count(),
+            GrossIncome = films.Sum(f => f.GrossIncome),
+            InStock = inStock
+        };
     }
 }

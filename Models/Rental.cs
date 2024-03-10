@@ -28,7 +28,7 @@ public class Rental
     public Inventory Inventory { get; set; } = null!;
 
     [Column("return_date")]
-    public DateTime ReturnDate { get; set; }
+    public DateTime? ReturnDate { get; set; }
 
     [Column("last_update")]
     public DateTime LastUpdate { get; set; }

@@ -81,11 +81,10 @@ public class RentalsController : ControllerBase
     /// </summary>
     /// <param name="from">starting date</param>
     /// <param name="to">ending date</param>
-    /// <param name="includeNotReturned">include rentals that hasn't be returned</param>
     /// <returns></returns>
     [HttpGet("monthly_rental_revenue")]
     [ProducesResponseType(200, Type = typeof(IEnumerable<RentalMonthRevenueDTO>))]
-    public async Task<IActionResult> GetMonthlyRentalRevenue(string from = SakilaConstant.START_RENT_DATE, string to = SakilaConstant.END_RENT_DATE, bool includeNotReturned = false)
+    public async Task<IActionResult> GetMonthlyRentalRevenue(string from = SakilaConstant.START_RENT_DATE, string to = SakilaConstant.END_RENT_DATE)
     {
         if (!DateOnly.TryParse(from, out DateOnly fromDate))
         {
@@ -97,7 +96,7 @@ public class RentalsController : ControllerBase
             return BadRequest("The from parameter is an invalid date");
         }
 
-        IEnumerable<RentalMonthRevenueDTO> rentalMonthlyProfitSummary = await rentalService.GetMonthlyRentalRevenue(fromDate, toDate, includeNotReturned);
+        IEnumerable<RentalMonthRevenueDTO> rentalMonthlyProfitSummary = await rentalService.GetMonthlyRentalRevenue(fromDate, toDate);
 
         return Ok(rentalMonthlyProfitSummary);
     }
