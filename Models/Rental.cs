@@ -32,5 +32,7 @@ public class Rental
 
     [Column("last_update")]
     public DateTime LastUpdate { get; set; }
+
+    public Payment? Payment { get; set; }
 }
 

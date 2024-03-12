@@ -41,12 +41,14 @@ public class RentalsController : ControllerBase
     /// </summary>
     /// <param name="page"></param>
     /// <param name="limit"></param>
+    /// <param name="customerId"></param>
+    /// <param name="filmId"></param>
     /// <returns></returns>
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(RentalsGetDTO))]
-    public async Task<IActionResult> GetRentals(int page = 1, int limit = 10)
+    public async Task<IActionResult> GetRentals(int page = 1, int limit = 10, int? customerId = null, int? filmId = null)
     {
-        RentalsGetDTO rentals = await rentalService.GetRentals(page, limit);
+        RentalsGetDTO rentals = await rentalService.GetRentals(page, limit, customerId, filmId);
 
         return Ok(rentals);
     }

@@ -10,6 +10,7 @@ public class FilmGetDTO
     public string? ReleaseYear { get; set; }
     public byte RentalDuration { get; set; }
     public decimal RentalRate { get; set; }
+    public decimal ReplacementCost { get; set; }
     public short Length { get; set; }
     public string? Rating { get; set; }
     public DateTime LastUpdate { get; set; }
@@ -25,6 +26,7 @@ public class FilmGetDTO
             ReleaseYear = f.ReleaseYear,
             RentalDuration = f.RentalDuration,
             RentalRate = f.RentalRate,
+            ReplacementCost = f.ReplacementCost,
             Length = f.Length,
             Rating = f.Rating,
             LastUpdate = f.LastUpdate,

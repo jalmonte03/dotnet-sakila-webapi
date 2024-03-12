@@ -24,6 +24,8 @@ public class CustomerDTO
 
     public String? Zipcode { get; set; }
 
+    public DateTime Created { get; set; }
+
     public static CustomerDTO MapCustomerToDTO (Customer c)
     {
         return new CustomerDTO()
@@ -36,7 +38,8 @@ public class CustomerDTO
             StreetAddress2 = c.Address.StreetAddress2,
             City = c.Address.City.CityName,
             Country = c.Address.City.Country.CountryName,
-            Email = c.Email
+            Email = c.Email,
+            Created = c.CreateDate
         };
     }
 }

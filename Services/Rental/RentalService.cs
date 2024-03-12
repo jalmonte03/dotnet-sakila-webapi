@@ -18,6 +18,7 @@ public class RentalService : IRentalService
     {
         Rental? rental = await db.Rentals
             .Include(r => r.Customer)
+            .Include(r => r.Payment)
             .Include(r => r.Inventory)
             .ThenInclude(i => i.Film)
             .FirstOrDefaultAsync(r => r.Id == Id);
@@ -30,15 +31,18 @@ public class RentalService : IRentalService
         return RentalGetDTO.MapRentalToDTO(rental);
     }
 
-    public async Task<RentalsGetDTO> GetRentals(int Page = 1, int Limit = 10)
+    public async Task<RentalsGetDTO> GetRentals(int Page = 1, int Limit = 10, int? CustomerId = null, int? FilmId = null)
     {
-        var rentalsQuery = db.Rentals.AsQueryable();
-        var rentalsCount = rentalsQuery.Count();
-
-        var rentals = await rentalsQuery
+        var rentalsQuery = db.Rentals
             .Include(r => r.Customer)
             .Include(r => r.Inventory)
             .ThenInclude(i => i.Film)
+            .Where(r => CustomerId != null ? r.CustomerId == CustomerId : true)
+            .Where(r => FilmId != null ? r.Inventory.FilmId == FilmId : true);
+
+        var rentalsCount = rentalsQuery.Count();
+
+        var rentals = await rentalsQuery
             .Skip((Page - 1) * Limit)
             .Take(Limit)
             .ToListAsync();

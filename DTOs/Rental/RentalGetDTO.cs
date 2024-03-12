@@ -13,6 +13,7 @@ public class RentalGetDTO
     public string? FilmReleaseYear { get; set; }
     public byte FilmRentalDuration { get; set; }
     public decimal FilmRentalRate { get; set; }
+    public decimal PaymentAmount { get; set; }
     public DateTime RentalDate { get; set; }
     public DateTime? ReturnDate { get; set; }
 
@@ -26,7 +27,8 @@ public class RentalGetDTO
                 CustomerId = r.CustomerId,
                 InventoryId = r.InventoryId,
                 RentalDate = r.RentalDate,
-                ReturnDate = r.ReturnDate
+                ReturnDate = r.ReturnDate,
+                PaymentAmount = r.Payment != null ? r.Payment.Amount : 0
             };
         }
 
@@ -41,6 +43,7 @@ public class RentalGetDTO
             FilmReleaseYear = r.Inventory.Film.ReleaseYear,
             FilmRentalDuration = r.Inventory.Film.RentalDuration,
             FilmRentalRate = r.Inventory.Film.RentalRate,
+            PaymentAmount = r.Payment != null ? r.Payment.Amount : 0,
             RentalDate = r.RentalDate,
             ReturnDate = r.ReturnDate
         };

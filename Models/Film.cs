@@ -29,6 +29,11 @@ public class Film
     [Column("rental_rate")]
     public decimal RentalRate { get; set; }
 
+    [Required]
+    [DefaultValue(19.99)]
+    [Column("replacement_cost")]
+    public decimal ReplacementCost { get; set; }
+
     public short Length { get; set; }
 
     [DefaultValue('G')]
