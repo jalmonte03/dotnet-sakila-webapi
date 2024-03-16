@@ -48,6 +48,16 @@ public class RentalsController : ControllerBase
     [ProducesResponseType(200, Type = typeof(RentalsGetDTO))]
     public async Task<IActionResult> GetRentals(int page = 1, int limit = 10, int? customerId = null, int? filmId = null)
     {
+        if (page <= 0)
+        {
+            return BadRequest("The page property must be greater than zero.");
+        }
+        
+        if (limit <= 0)
+        {
+            return BadRequest("The limit property must be greater than zero.");
+        }
+
         RentalsGetDTO rentals = await rentalService.GetRentals(page, limit, customerId, filmId);
 
         return Ok(rentals);

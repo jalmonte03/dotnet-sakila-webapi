@@ -45,8 +45,14 @@ public class FilmsController : ControllerBase
     /// <returns></returns>
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(FilmsGetDTO))]
+    [ProducesResponseType(400, Type = typeof(string))]
     public async Task<IActionResult> GetAllFilms(int page = 1, int limit = 10, string title = "")
     {
+        if (page <= 0 || limit <= 0)
+        {
+            return BadRequest("Page and Limit must be greater than 0");
+        } 
+
         return Ok(await filmService.GetFilms(page, limit, title));
     }
 
