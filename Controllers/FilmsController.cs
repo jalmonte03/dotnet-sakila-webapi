@@ -66,6 +66,7 @@ public class FilmsController : ControllerBase
     [HttpGet("most_rented_films")]
     [ProducesResponseType(200, Type = typeof(IEnumerable<RentalRentedInfoDTO>))]
     [ProducesResponseType(400, Type = typeof(string))]
+    [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetMostRentedFilms(int limit = 3, string from = SakilaConstant.START_RENT_DATE, string to = SakilaConstant.END_RENT_DATE)
     {
         if (limit <= 0)
@@ -100,6 +101,7 @@ public class FilmsController : ControllerBase
     /// <returns></returns>
     [HttpGet("most_watched_categories")]
     [ProducesResponseType(200, Type = typeof(IEnumerable<CategoryRentedDTO>))]
+    [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetMostWatchedCategories(int limit = 3, string from = SakilaConstant.START_RENT_DATE, string to = SakilaConstant.END_RENT_DATE)
     {
         if (limit <= 0)

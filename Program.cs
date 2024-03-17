@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
+using AspNetCoreRateLimit;
 using Microsoft.OpenApi.Models;
 using Sakila.App.WebAPI.Context;
 using Sakila.App.WebAPI.Service;
@@ -32,12 +33,18 @@ builder.Services.AddSwaggerGen(options => {
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
+
 builder.Services.AddCors(options => {
     options.AddDefaultPolicy(policy => policy
         .AllowAnyHeader()
         .AllowAnyOrigin()
         .AllowAnyMethod());
 });
+
+builder.Services.AddMemoryCache();
+builder.Services.Configure<ClientRateLimitOptions>(builder.Configuration.GetSection("ClientRateLimiting"));
+builder.Services.AddInMemoryRateLimiting();
+builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 
 var app = builder.Build();
 
@@ -50,6 +57,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors();
+
+app.UseClientRateLimiting();
 
 app.UseHttpsRedirection();
 

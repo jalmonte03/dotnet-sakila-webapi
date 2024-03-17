@@ -71,6 +71,7 @@ public class RentalsController : ControllerBase
     /// <returns></returns>
     [HttpGet("rentals_monthly_summary")]
     [ProducesResponseType(200, Type = typeof(IEnumerable<RentalMonthSummaryDTO>))]
+    [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetMonthlySummary(string from = SakilaConstant.START_RENT_DATE, string to = SakilaConstant.END_RENT_DATE)
     {
         if (!DateOnly.TryParse(from, out DateOnly fromDate))
@@ -96,6 +97,7 @@ public class RentalsController : ControllerBase
     /// <returns></returns>
     [HttpGet("monthly_rental_revenue")]
     [ProducesResponseType(200, Type = typeof(IEnumerable<RentalMonthRevenueDTO>))]
+    [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetMonthlyRentalRevenue(string from = SakilaConstant.START_RENT_DATE, string to = SakilaConstant.END_RENT_DATE)
     {
         if (!DateOnly.TryParse(from, out DateOnly fromDate))
