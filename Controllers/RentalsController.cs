@@ -6,7 +6,7 @@ using Sakila.App.WebAPI.Service;
 namespace Sakila.App.WebAPI.Controller;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class RentalsController : ControllerBase
 {
     IRentalService rentalService;

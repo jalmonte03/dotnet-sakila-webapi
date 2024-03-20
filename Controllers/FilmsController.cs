@@ -6,7 +6,7 @@ using Sakila.App.WebAPI.Constants;
 namespace Sakila.App.WebAPI.Controller;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class FilmsController : ControllerBase
 {
     IFilmService filmService;    

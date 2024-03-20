@@ -37,8 +37,8 @@ builder.Services.AddSwaggerGen(options => {
 builder.Services.AddCors(options => {
     options.AddDefaultPolicy(policy => policy
         .AllowAnyHeader()
-        .AllowAnyOrigin()
-        .AllowAnyMethod());
+        .AllowAnyMethod()
+        .WithOrigins("http://localhost:4200", "https://sakila-app.almontej.net"));
 });
 
 builder.Services.AddMemoryCache();
@@ -51,16 +51,15 @@ var app = builder.Build();
 // Configure the HTTP reqpipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
     app.UseDeveloperExceptionPage();
 }
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseCors();
 
 app.UseClientRateLimiting();
-
-app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
